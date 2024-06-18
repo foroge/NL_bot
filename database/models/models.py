@@ -1,6 +1,6 @@
 import enum
 import datetime
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Set
 
 from sqlalchemy import ForeignKey, text, BigInteger, event
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -13,24 +13,24 @@ PRIM_ID = Annotated[int, mapped_column(primary_key=True, autoincrement=True)]
 class User(Base):
     __tablename__ = 'users'
 
-    id: PRIM_ID
-    contacts: Mapped[Set["Contact"]] = relationship("user")
+    id: Mapped[PRIM_ID]
+    contacts: Mapped[Set["Contact"]] = relationship(back_populates="user")
 
 
 class Contact(Base):
     __tablename__ = "contacts"
 
-    id: PRIM_ID
+    id: Mapped[PRIM_ID]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship("contacts")
-    products: Mapped[Set["Product"]] = relationship("contact")
-    characteristics: Mapped[Set["Characteristic"]] = relationship("contact")
+    user: Mapped["User"] = relationship(back_populates="contacts")
+    products: Mapped[Set["Product"]] = relationship(back_populates="contact")
+    characteristics: Mapped[Set["Characteristic"]] = relationship(back_populates="contact")
 
 
 class Product(Base):
     __tablename__ = "products"
 
-    id: PRIM_ID
+    id: Mapped[PRIM_ID]
 
     title: Mapped[str]
     task: Mapped[str]
@@ -39,17 +39,18 @@ class Product(Base):
     note: Mapped[str]
 
     contact_id: Mapped[int] = mapped_column(ForeignKey("contacts.id"))
-    contact: Mapped["Contact"] = relationship("products")
+    contact: Mapped["Contact"] = relationship(back_populates="products")
 
 
 class Characteristic(Base):
     __tablename__ = "characteristics"
 
-    id: PRIM_ID
+    id: Mapped[PRIM_ID]
 
     title: Mapped[str]
     description: Mapped[str]
     type: Mapped[str]
 
     contact_id: Mapped[int] = mapped_column(ForeignKey("contacts.id"))
-    contact: Mapped["Contact"] = relationship("characteristics")
+    contact: Mapped["Contact"] = relationship(back_populates="characteristics")
+

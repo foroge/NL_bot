@@ -1,7 +1,7 @@
 import logging
 import asyncio
 from datetime import datetime
-from servies.file_handler import FilesHandler
+from services.file_handler import FilesHandler
 
 asyncio.run(FilesHandler.create_directory("logs"))
 # logging.basicConfig(filename='example.log',
@@ -18,7 +18,7 @@ logger = logging.getLogger()
 logger.addHandler(handler)
 logger.addHandler(reader_handler)
 
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 # for name in {"httpcore.connection", "httpx", "httpcore.http11"}:
 #     temp_logger = logging.getLogger(name)
 #     temp_logger.setLevel(logging.WARNING)

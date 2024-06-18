@@ -24,12 +24,13 @@ class Config:
     DataBase: PostgreSQL
 
 
-def load_config(path: Union[str | None] = None):
+def load_config(path: Union[str | None] = None, test: bool = False):
     env = Env()
     env.read_env(path)
+    name: str = env("POSTGRES_DB") if not test else env("POSTGRES_TEST_DB")
     return Config(TelegramBotToken=BotToken(env("BOT_TOKEN")),
                   DataBase=PostgreSQL(USER=env("POSTGRES_USER"),
                                       PASSWORD=env("POSTGRES_PASSWORD"),
                                       HOST=env("POSTGRES_HOST"),
                                       PORT=env("POSTGRES_PORT"),
-                                      NAME=env("POSTGRES_DB")))
+                                      NAME=name))
